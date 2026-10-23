@@ -1,4 +1,5 @@
 import json
+from logging import log
 import yaml
 import subprocess
 from pathlib import Path
@@ -36,7 +37,17 @@ class CloudflaredGateway:
 
     def credentials_path(self, tunnel):
         return str(CF_DIR / f"{tunnel.id}.json")
+    
+    def login(self, log=print):
+        """Runs cloudflared tunnel login and displays the output (URL) in real time."""
+        log("Open the displayed URL in your browser and click Authorize...")
+    r = subprocess.run(["cloudflared", "tunnel", "login"])
+    if r.returncode != 0:
+        raise LabError("Login failed.")
 
+
+    def is_logged_in(self):
+        return (CF_DIR / "cert.pem").exists()
 
 class YamlConfigStore:
     
@@ -47,13 +58,3 @@ class YamlConfigStore:
         self.path.write_text(yaml.safe_dump(config, sort_keys=False))
         
         
-def login(self, log=print):
-    
-    """Runs cloudflared tunnel login and displays the output (URL) in real time."""
-    log("Open the displayed URL in your browser and click Authorize...")
-    r = subprocess.run(["cloudflared", "tunnel", "login"])
-    if r.returncode != 0:
-        raise LabError("Login failed.")
-
-def is_logged_in(self):
-    return (CF_DIR / "cert.pem").exists()
