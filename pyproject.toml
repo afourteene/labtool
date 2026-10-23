@@ -1,0 +1,17 @@
+[project]
+name = "labtool"
+version = "0.1.0"
+dependencies = ["click>=8.1", "pyyaml>=6.0"]
+
+[project.scripts]
+labtool = "labtool.cli:cli"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "build"]
