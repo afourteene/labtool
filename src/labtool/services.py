@@ -6,6 +6,7 @@ from .domain import plan_install
 
 
 def init_tunnel(lab, gateway, store, log=print):
+    ensure_login(gateway, log)
     tunnel = gateway.find(lab.tunnel_name)
     if tunnel:
         log(f"tunnel {lab.tunnel_name} already exists.")
@@ -33,4 +34,11 @@ def install_cloudflared(detect, installed, run, log=print):
     commands = plan_install(detect())
     run(commands, log)
     log("cloudflared installed.")
+    return True
+
+def ensure_login(gateway, log=print):
+    if gateway.is_logged_in():
+        log("Already logged in.")
+        return False
+    gateway.login(log)
     return True
