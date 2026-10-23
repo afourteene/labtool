@@ -47,7 +47,13 @@ class Platform:
     has_apt: bool = False
     has_brew: bool = False
 
-
+@dataclass(frozen=True)
+class RunState:
+    """Whether the tunnel process is running, and its PID if so."""
+    running: bool
+    pid: int | None = None
+    
+    
 def plan_install(p):
     """List of commands required to install cloudflared on this platform."""
     if p.system == "darwin":
